@@ -1,19 +1,15 @@
 @echo off
 
-REM Set the folder path based on the existence of the D: drive
-if exist D:\ (
-    set "folder_path=D:\Temp_batch_queue"
-	echo Files for the queue are put in D:\Temp_batch_queue.
-) else (
-    set "folder_path=C:\Temp_batch_queue"
-	echo Files for the queue are put in C:\Temp_batch_queue.
-)
+set "folder_path=%userprofile%\Temp_batch_queue"
+echo Files for the queue are put in %userprofile%\Temp_batch_queue
+if not exist "%userprofile%\Temp_batch_queue" mkdir "%userprofile%\Temp_batch_queue"
 
 REM Increment the number of jobs in the queue and add this job to the list of jobs waiting
 set /p number=<%folder_path%\Number_of_jobs_in_the_queue.txt
 set /a number+=1
 echo %number% > %folder_path%\Number_of_jobs_in_the_queue.txt
-echo This file is being executed as job number %number%.
+set /p lastest_job_done_number=<%folder_path%\lastest_job_done.txt
+echo This file is being executed as job %number% in the list of all jobs of which we have reached %lastest_job_done_number% completed jobs.
 echo %number% %~dp0%~n0 %date% %time% >> %folder_path%\Jobs_waiting_to_run.txt
 
 REM Wait for your turn in the queue
